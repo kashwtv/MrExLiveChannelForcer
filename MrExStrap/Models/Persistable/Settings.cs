@@ -130,6 +130,12 @@ namespace MrExStrap.Models.Persistable
         // preset and installs dark textures for visual clarity. Persists across updates.
         public bool PerformanceModeEnabled { get; set; } = false;
 
+        // Stretch Resolution — resize Roblox window to a non-native aspect ratio after
+        // launch for a wider FOV feel, popular in Rivals PvP.
+        public StretchResolution StretchResolution { get; set; } = StretchResolution.Disabled;
+        public int StretchResCustomWidth { get; set; } = 1440;
+        public int StretchResCustomHeight { get; set; } = 1080;
+
         // user-visible debug mode — reveals the Run health check button (MrExStrap fork feature)
         public bool DebugModeEnabled { get; set; } = false;
 

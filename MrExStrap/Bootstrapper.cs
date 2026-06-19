@@ -1120,6 +1120,16 @@ namespace MrExStrap
                 MrExStrap.Utility.WindowTiler.ScheduleTilePass(App.Settings.Prop.WindowTilingLayout);
             }
 
+            // Stretch resolution: resize the Roblox window to a custom resolution after launch.
+            if (App.Settings.Prop.StretchResolution != StretchResolution.Disabled && _launchMode == LaunchMode.Player)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Stretch resolution enabled — scheduling {App.Settings.Prop.StretchResolution}");
+                MrExStrap.Utility.StretchResApplier.ScheduleApply(
+                    App.Settings.Prop.StretchResolution,
+                    App.Settings.Prop.StretchResCustomWidth,
+                    App.Settings.Prop.StretchResCustomHeight);
+            }
+
             logCreatedEvent.WaitOne(TimeSpan.FromSeconds(15));
 
             if (String.IsNullOrEmpty(logFileName))
