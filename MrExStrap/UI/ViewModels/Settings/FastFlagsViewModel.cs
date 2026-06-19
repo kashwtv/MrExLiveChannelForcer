@@ -54,6 +54,9 @@ namespace MrExStrap.UI.ViewModels.Settings
             get => App.Settings.Prop.PerformanceModeEnabled;
             set
             {
+                if (App.Settings.Prop.PerformanceModeEnabled == value)
+                    return;
+
                 App.Settings.Prop.PerformanceModeEnabled = value;
                 OnPropertyChanged(nameof(PerformanceModeEnabled));
 

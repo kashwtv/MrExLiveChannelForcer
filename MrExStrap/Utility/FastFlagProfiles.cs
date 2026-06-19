@@ -266,14 +266,19 @@ namespace MrExStrap.Utility
 
             try
             {
-                if (File.Exists(DarkTexturesMarker))
+                bool markerExists = File.Exists(DarkTexturesMarker);
+                bool dirExists = Directory.Exists(DarkTexturesDir);
+
+                if (!markerExists && !dirExists)
+                    return;
+
+                if (markerExists)
                     File.Delete(DarkTexturesMarker);
 
-                if (Directory.Exists(DarkTexturesDir))
-                {
+                if (dirExists)
                     Directory.Delete(DarkTexturesDir, recursive: true);
-                    App.Logger.WriteLine(IDENT, "Dark textures removed.");
-                }
+
+                App.Logger.WriteLine(IDENT, "Dark textures removed.");
             }
             catch (Exception ex)
             {
