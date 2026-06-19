@@ -207,6 +207,18 @@ namespace MrExStrap.UI.ViewModels.Settings
             }
         }
 
+        public bool StreamerModeEnabled
+        {
+            get => App.Settings.Prop.StreamerModeEnabled;
+            set => App.Settings.Prop.StreamerModeEnabled = value;
+        }
+
+        public bool HotkeysEnabled
+        {
+            get => App.Settings.Prop.HotkeysEnabled;
+            set => App.Settings.Prop.HotkeysEnabled = value;
+        }
+
         public bool ResetConfiguration
         {
             get => _preResetFlags is not null;

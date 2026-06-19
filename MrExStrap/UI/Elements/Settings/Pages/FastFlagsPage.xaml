@@ -79,6 +79,20 @@
             <ui:ToggleSwitch IsChecked="{Binding InputLagReducerEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <!-- ===== Streamer Mode ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Streamer Mode"
+            Description="Hide your account username from the launcher when streaming or recording.">
+            <ui:ToggleSwitch IsChecked="{Binding StreamerModeEnabled, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- ===== Global Hotkeys ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Global Hotkeys"
+            Description="Enable global keyboard shortcuts for quick actions (experimental).">
+            <ui:ToggleSwitch IsChecked="{Binding HotkeysEnabled, Mode=TwoWay}" />
+        </controls:OptionControl>
+
         <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
                     Visibility="{Binding CustomStretchResVisibility}">
             <TextBlock Text="Width:" VerticalAlignment="Center" Margin="0,0,8,0" />

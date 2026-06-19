@@ -148,6 +148,18 @@ namespace MrExStrap.Models.Persistable
         // Input lag reducer — applies low-latency fast flags
         public bool InputLagReducerEnabled { get; set; } = false;
 
+        // Streamer Mode — hides account username from launcher UI
+        public bool StreamerModeEnabled { get; set; } = false;
+
+        // Custom Game Profiles — saved configurations (version profile + stretch res + graphics preset)
+        public Dictionary<string, GameLaunchProfile> CustomGameProfiles { get; set; } = new();
+
+        // Hotkeys — global keybinds for quick actions
+        public bool HotkeysEnabled { get; set; } = false;
+        public string HotkeyTogglePerfMode { get; set; } = "Ctrl+Shift+P";
+        public string HotkeyQuickLaunch { get; set; } = "Ctrl+Shift+L";
+        public string HotkeyToggleStreamerMode { get; set; } = "Ctrl+Shift+S";
+
         // user-visible debug mode — reveals the Run health check button (MrExStrap fork feature)
         public bool DebugModeEnabled { get; set; } = false;
 
