@@ -169,6 +169,13 @@ namespace MrExStrap.Models.Persistable
         // Latency Monitor — display network stats overlay (framework in place)
         public bool LatencyMonitorEnabled { get; set; } = false;
 
+        // Competitive Mode — one-click enable all competitive optimizations
+        public bool CompetitiveModeEnabled { get; set; } = false;
+
+        // Session tracking — games launched and playtime
+        public int GamesLaunchedThisSession { get; set; } = 0;
+        public long PlaytimeSeconds { get; set; } = 0;
+
         // user-visible debug mode — reveals the Run health check button (MrExStrap fork feature)
         public bool DebugModeEnabled { get; set; } = false;
 

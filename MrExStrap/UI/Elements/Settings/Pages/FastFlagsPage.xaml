@@ -31,6 +31,22 @@
             <ui:ToggleSwitch IsChecked="{Binding UseFastFlagManager, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <!-- ===== COMPETITIVE MODE (ONE-CLICK) ===== -->
+        <Border Margin="0,20,0,0" Padding="12,12" CornerRadius="4"
+                Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
+                BorderBrush="{DynamicResource SystemFillColorCautionBrush}" BorderThickness="0,0,0,3">
+            <StackPanel>
+                <TextBlock FontWeight="Bold" FontSize="14" Margin="0,0,0,8"
+                           Text="🎮 COMPETITIVE MODE — One-Click Optimization" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           TextWrapping="Wrap" Margin="0,0,0,12"
+                           Text="Enables Performance Mode, Input Lag Reducer, Memory Optimizer, Process Priority Booster, and Competitive graphics preset. Perfect for Rivals PvP." />
+                <controls:OptionControl Header="Competitive Mode" Description="">
+                    <ui:ToggleSwitch IsChecked="{Binding CompetitiveModeEnabled, Mode=TwoWay}" />
+                </controls:OptionControl>
+            </StackPanel>
+        </Border>
+
         <!-- ===== Performance Mode ===== -->
         <controls:OptionControl Margin="0,16,0,0"
             Header="Performance Mode"

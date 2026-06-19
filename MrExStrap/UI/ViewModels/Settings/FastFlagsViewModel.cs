@@ -237,6 +237,51 @@ namespace MrExStrap.UI.ViewModels.Settings
             set => App.Settings.Prop.LatencyMonitorEnabled = value;
         }
 
+        public bool CompetitiveModeEnabled
+        {
+            get => App.Settings.Prop.CompetitiveModeEnabled;
+            set
+            {
+                if (App.Settings.Prop.CompetitiveModeEnabled == value)
+                    return;
+
+                App.Settings.Prop.CompetitiveModeEnabled = value;
+                OnPropertyChanged(nameof(CompetitiveModeEnabled));
+
+                if (value)
+                {
+                    App.Settings.Prop.PerformanceModeEnabled = true;
+                    App.Settings.Prop.InputLagReducerEnabled = true;
+                    App.Settings.Prop.ProcessPriorityBooster = true;
+                    App.Settings.Prop.MemoryOptimizerEnabled = true;
+                    App.Settings.Prop.GraphicsPreset = GraphicsPreset.Competitive;
+                    GraphicsPresetsManager.ApplyPreset(GraphicsPreset.Competitive);
+                    _ = FastFlagProfiles.InstallDarkTexturesAsync();
+
+                    OnPropertyChanged(nameof(PerformanceModeEnabled));
+                    OnPropertyChanged(nameof(InputLagReducerEnabled));
+                    OnPropertyChanged(nameof(ProcessPriorityBooster));
+                    OnPropertyChanged(nameof(MemoryOptimizerEnabled));
+                    OnPropertyChanged(nameof(SelectedGraphicsPreset));
+                }
+                else
+                {
+                    App.Settings.Prop.PerformanceModeEnabled = false;
+                    App.Settings.Prop.InputLagReducerEnabled = false;
+                    App.Settings.Prop.ProcessPriorityBooster = false;
+                    App.Settings.Prop.MemoryOptimizerEnabled = false;
+                    App.Settings.Prop.GraphicsPreset = GraphicsPreset.Default;
+                    FastFlagProfiles.RemoveDarkTextures();
+
+                    OnPropertyChanged(nameof(PerformanceModeEnabled));
+                    OnPropertyChanged(nameof(InputLagReducerEnabled));
+                    OnPropertyChanged(nameof(ProcessPriorityBooster));
+                    OnPropertyChanged(nameof(MemoryOptimizerEnabled));
+                    OnPropertyChanged(nameof(SelectedGraphicsPreset));
+                }
+            }
+        }
+
         public bool ResetConfiguration
         {
             get => _preResetFlags is not null;
