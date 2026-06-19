@@ -67,6 +67,43 @@ namespace MrExStrap.Utility
                 { "DFIntBatchSizeGui", "32" },
                 { "FFlagEnableQuickGameLaunch", "True" },
                 { "FFlagPreloadTexturesPrefetchAll", "False" },
+
+                // --- Grass & vegetation ---
+                { "FIntFRMMaxGrassDistance", "0" },
+                { "FIntFRMMinGrassDistance", "0" },
+                { "FIntGrassMovementReducedMotionFactor", "999" },
+
+                // --- Sky & atmosphere ---
+                { "FFlagDebugSkyGray", "True" },
+
+                // --- Voxel lighting ---
+                { "DFFlagDebugPauseVoxelizer", "True" },
+
+                // --- Particles & effects ---
+                { "DFIntMaxActiveParticleCount", "0" },
+                { "FFlagEnableParticleLOD", "True" },
+
+                // --- Humanoid & character ---
+                { "DFIntReplicatorLagReportThreshold", "9999" },
+                { "DFIntReplicatorLagReportHundredthsPercent", "0" },
+                { "FFlagPlayerHideCharDuringTeleport", "True" },
+
+                // --- Sound overhead ---
+                { "FFlagEnableVoiceChatLocalPlaybackPerfImprovement", "True" },
+                { "DFIntMaxSoundsPerFrame", "2" },
+
+                // --- Physics ---
+                { "DFIntPhysicsSenderMaxBandwidthBps", "50000" },
+                { "DFIntPhysicsSenderMaxBandwidthBpsScaling", "1" },
+
+                // --- Misc CPU ---
+                { "DFIntOptimizeNetworkTransport", "1" },
+                { "FFlagDebugCheckRenderThreading", "True" },
+                { "FFlagRenderDebugCheckThreading2", "True" },
+                { "DFIntMaxUnstuffedQueue", "10" },
+                { "DFIntDebugDynamicLODFactor", "100" },
+                { "DFIntBatchSizeTerrainVertices", "256" },
+                { "FFlagRenderFixFog", "False" },
             };
 
         private static string CanonicalFile =>
