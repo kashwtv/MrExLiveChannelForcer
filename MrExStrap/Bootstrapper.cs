@@ -1130,6 +1130,13 @@ namespace MrExStrap
                     App.Settings.Prop.StretchResCustomHeight);
             }
 
+            // Always-on-top: keep Roblox window on top of other windows after launch.
+            if (App.Settings.Prop.WindowAlwaysOnTop && _launchMode == LaunchMode.Player)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Always-on-top enabled — scheduling window positioning.");
+                MrExStrap.Utility.WindowHelper.SetAlwaysOnTop(true);
+            }
+
             logCreatedEvent.WaitOne(TimeSpan.FromSeconds(15));
 
             if (String.IsNullOrEmpty(logFileName))

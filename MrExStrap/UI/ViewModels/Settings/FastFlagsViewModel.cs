@@ -68,6 +68,25 @@ namespace MrExStrap.UI.ViewModels.Settings
             }
         }
 
+        public List<string> GraphicsPresetOptions { get; } =
+            Enum.GetValues<GraphicsPreset>()
+                .Select(GraphicsPresetsManager.GetDisplayName)
+                .ToList();
+
+        public string SelectedGraphicsPreset
+        {
+            get => GraphicsPresetsManager.GetDisplayName(App.Settings.Prop.GraphicsPreset);
+            set
+            {
+                var match = Enum.GetValues<GraphicsPreset>()
+                    .FirstOrDefault(p => GraphicsPresetsManager.GetDisplayName(p) == value);
+
+                App.Settings.Prop.GraphicsPreset = match;
+                GraphicsPresetsManager.ApplyPreset(match);
+                OnPropertyChanged(nameof(SelectedGraphicsPreset));
+            }
+        }
+
         public List<string> StretchResOptions { get; } =
             Enum.GetValues<StretchResolution>()
                 .Select(StretchResApplier.GetDisplayName)
@@ -109,6 +128,82 @@ namespace MrExStrap.UI.ViewModels.Settings
             {
                 if (value > 0)
                     App.Settings.Prop.StretchResCustomHeight = value;
+            }
+        }
+
+        public bool WindowAlwaysOnTop
+        {
+            get => App.Settings.Prop.WindowAlwaysOnTop;
+            set => App.Settings.Prop.WindowAlwaysOnTop = value;
+        }
+
+        public List<string> FpsLimitOptions { get; } = new()
+        {
+            "Unlimited",
+            "240 FPS",
+            "144 FPS",
+            "120 FPS",
+            "60 FPS"
+        };
+
+        public string SelectedFpsLimit
+        {
+            get => App.Settings.Prop.FpsLimit switch
+            {
+                0 => "Unlimited",
+                60 => "60 FPS",
+                120 => "120 FPS",
+                144 => "144 FPS",
+                240 => "240 FPS",
+                _ => "Unlimited"
+            };
+            set
+            {
+                int newLimit = value switch
+                {
+                    "Unlimited" => 0,
+                    "60 FPS" => 60,
+                    "120 FPS" => 120,
+                    "144 FPS" => 144,
+                    "240 FPS" => 240,
+                    _ => 0
+                };
+
+                App.Settings.Prop.FpsLimit = newLimit;
+                if (newLimit > 0)
+                    App.FastFlags.SetValue("DFIntTaskSchedulerTargetFps", newLimit.ToString());
+                else
+                    App.FastFlags.SetValue("DFIntTaskSchedulerTargetFps", null);
+
+                OnPropertyChanged(nameof(SelectedFpsLimit));
+            }
+        }
+
+        public bool InputLagReducerEnabled
+        {
+            get => App.Settings.Prop.InputLagReducerEnabled;
+            set
+            {
+                if (App.Settings.Prop.InputLagReducerEnabled == value)
+                    return;
+
+                App.Settings.Prop.InputLagReducerEnabled = value;
+                OnPropertyChanged(nameof(InputLagReducerEnabled));
+
+                if (value)
+                {
+                    App.FastFlags.SetValue("FFlagDebugCheckRenderThreading", "True");
+                    App.FastFlags.SetValue("FFlagRenderDebugCheckThreading2", "True");
+                    App.FastFlags.SetValue("DFIntMinimalNetClientSendRate", "36");
+                    App.FastFlags.SetValue("DFIntConnectionMTUSize", "900");
+                    App.FastFlags.SetValue("FFlagNetworkTransportSendWhenIdle2", "False");
+                    App.FastFlags.SetValue("DFIntReplicatorLagReportThreshold", "9999");
+                }
+                else
+                {
+                    App.FastFlags.SetValue("FFlagDebugCheckRenderThreading", null);
+                    App.FastFlags.SetValue("FFlagRenderDebugCheckThreading2", null);
+                }
             }
         }
 

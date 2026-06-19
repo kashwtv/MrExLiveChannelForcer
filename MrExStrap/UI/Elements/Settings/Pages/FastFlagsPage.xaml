@@ -38,6 +38,15 @@
             <ui:ToggleSwitch IsChecked="{Binding PerformanceModeEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <!-- ===== Graphics Presets ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Graphics Preset"
+            Description="Quick apply curated fast flag combinations for Competitive, Balanced, or Visual Quality gameplay.">
+            <ComboBox Margin="5,0,0,0" Padding="10,5,10,5" Width="280"
+                      ItemsSource="{Binding GraphicsPresetOptions, Mode=OneTime}"
+                      SelectedItem="{Binding SelectedGraphicsPreset, Mode=TwoWay}" />
+        </controls:OptionControl>
+
         <!-- ===== Stretch Resolution ===== -->
         <controls:OptionControl Margin="0,8,0,0"
             Header="Stretch Resolution"
@@ -45,6 +54,29 @@
             <ComboBox Margin="5,0,0,0" Padding="10,5,10,5" Width="200"
                       ItemsSource="{Binding StretchResOptions, Mode=OneTime}"
                       SelectedItem="{Binding SelectedStretchRes, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- ===== Window Options ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Always-on-Top"
+            Description="Keep the Roblox window on top of other windows after launch.">
+            <ui:ToggleSwitch IsChecked="{Binding WindowAlwaysOnTop, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- ===== FPS Limit ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="FPS Limit"
+            Description="Cap the maximum FPS to reduce GPU load and heat. Unlimited for maximum performance.">
+            <ComboBox Margin="5,0,0,0" Padding="10,5,10,5" Width="150"
+                      ItemsSource="{Binding FpsLimitOptions, Mode=OneTime}"
+                      SelectedItem="{Binding SelectedFpsLimit, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- ===== Input Lag Reducer ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Input Lag Reducer"
+            Description="Apply optimizations for lower mouse and keyboard latency in competitive play.">
+            <ui:ToggleSwitch IsChecked="{Binding InputLagReducerEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
         <StackPanel Orientation="Horizontal" Margin="0,8,0,0"

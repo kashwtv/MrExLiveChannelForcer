@@ -136,6 +136,18 @@ namespace MrExStrap.Models.Persistable
         public int StretchResCustomWidth { get; set; } = 1440;
         public int StretchResCustomHeight { get; set; } = 1080;
 
+        // Graphics preset — "Competitive", "Balanced", "VisualQuality"
+        public GraphicsPreset GraphicsPreset { get; set; } = GraphicsPreset.Default;
+
+        // Window always-on-top after launch
+        public bool WindowAlwaysOnTop { get; set; } = false;
+
+        // FPS cap — 60, 120, 144, 240, or unlimited
+        public int FpsLimit { get; set; } = 0;
+
+        // Input lag reducer — applies low-latency fast flags
+        public bool InputLagReducerEnabled { get; set; } = false;
+
         // user-visible debug mode — reveals the Run health check button (MrExStrap fork feature)
         public bool DebugModeEnabled { get; set; } = false;
 
