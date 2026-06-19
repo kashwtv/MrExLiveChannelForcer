@@ -19,7 +19,7 @@ namespace MrExStrap.Utility
         public static readonly IReadOnlyDictionary<string, string> PerformanceModeFlags =
             new Dictionary<string, string>
             {
-                { "DFIntTaskSchedulerTargetFps", "9999" },
+                { "DFIntTaskSchedulerTargetFps", "240" },
                 { "FFlagDisablePostFx", "True" },
                 { "DFIntDebugFRMQualityLevelOverride", "1" },
                 { "FFlagEnableBetterShadows", "False" },
