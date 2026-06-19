@@ -219,6 +219,24 @@ namespace MrExStrap.UI.ViewModels.Settings
             set => App.Settings.Prop.HotkeysEnabled = value;
         }
 
+        public bool MemoryOptimizerEnabled
+        {
+            get => App.Settings.Prop.MemoryOptimizerEnabled;
+            set => App.Settings.Prop.MemoryOptimizerEnabled = value;
+        }
+
+        public bool ProcessPriorityBooster
+        {
+            get => App.Settings.Prop.ProcessPriorityBooster;
+            set => App.Settings.Prop.ProcessPriorityBooster = value;
+        }
+
+        public bool LatencyMonitorEnabled
+        {
+            get => App.Settings.Prop.LatencyMonitorEnabled;
+            set => App.Settings.Prop.LatencyMonitorEnabled = value;
+        }
+
         public bool ResetConfiguration
         {
             get => _preResetFlags is not null;

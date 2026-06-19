@@ -1067,11 +1067,29 @@ namespace MrExStrap
                 logCreatedEvent.Set();
             };
 
+            // System optimization: clean memory and set process priority before launch.
+            if (App.Settings.Prop.MemoryOptimizerEnabled && _launchMode == LaunchMode.Player)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Memory optimizer enabled — forcing garbage collection.");
+                MrExStrap.Utility.SystemOptimizer.OptimizeMemory();
+            }
+
+            if (App.Settings.Prop.LatencyMonitorEnabled && _launchMode == LaunchMode.Player)
+            {
+                MrExStrap.Utility.SystemOptimizer.EnableLatencyMonitor();
+            }
+
             // v2.2.0 - byfron will trip if we keep a process handle open for over a minute, so we're doing this now
             try
             {
                 using var process = Process.Start(startInfo)!;
                 _appPid = process.Id;
+
+                if (App.Settings.Prop.ProcessPriorityBooster && _launchMode == LaunchMode.Player)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "Process priority booster enabled — scheduling priority increase.");
+                    MrExStrap.Utility.SystemOptimizer.SetRobloxPriorityHigh();
+                }
             }
             catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
             {

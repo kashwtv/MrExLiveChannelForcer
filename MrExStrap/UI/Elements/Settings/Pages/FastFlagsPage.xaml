@@ -93,6 +93,27 @@
             <ui:ToggleSwitch IsChecked="{Binding HotkeysEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <!-- ===== Memory Optimizer ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Memory Optimizer"
+            Description="Force garbage collection before launch to free up RAM.">
+            <ui:ToggleSwitch IsChecked="{Binding MemoryOptimizerEnabled, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- ===== Process Priority Booster ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Process Priority Booster"
+            Description="Set Roblox process to High priority for better frame consistency.">
+            <ui:ToggleSwitch IsChecked="{Binding ProcessPriorityBooster, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- ===== Latency Monitor ===== -->
+        <controls:OptionControl Margin="0,8,0,0"
+            Header="Latency Monitor"
+            Description="Display network latency and packet stats (framework in place for future overlay).">
+            <ui:ToggleSwitch IsChecked="{Binding LatencyMonitorEnabled, Mode=TwoWay}" />
+        </controls:OptionControl>
+
         <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
                     Visibility="{Binding CustomStretchResVisibility}">
             <TextBlock Text="Width:" VerticalAlignment="Center" Margin="0,0,8,0" />

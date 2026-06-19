@@ -160,6 +160,15 @@ namespace MrExStrap.Models.Persistable
         public string HotkeyQuickLaunch { get; set; } = "Ctrl+Shift+L";
         public string HotkeyToggleStreamerMode { get; set; } = "Ctrl+Shift+S";
 
+        // Memory Optimizer — force garbage collection before launch
+        public bool MemoryOptimizerEnabled { get; set; } = false;
+
+        // Process Priority Booster — set Roblox to high priority
+        public bool ProcessPriorityBooster { get; set; } = false;
+
+        // Latency Monitor — display network stats overlay (framework in place)
+        public bool LatencyMonitorEnabled { get; set; } = false;
+
         // user-visible debug mode — reveals the Run health check button (MrExStrap fork feature)
         public bool DebugModeEnabled { get; set; } = false;
 
