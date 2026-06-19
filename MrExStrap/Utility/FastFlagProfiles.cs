@@ -150,15 +150,19 @@ namespace MrExStrap.Utility
             }
         }
 
+        private static string DarkTexturesDir =>
+            Path.Combine(Paths.Modifications, "PlatformContent", "pc", "textures");
+
+        private static string DarkTexturesMarker =>
+            Path.Combine(Paths.Modifications, ".dark-textures-installed");
+
         public static async Task InstallDarkTexturesAsync()
         {
             const string IDENT = LOG_IDENT + "::InstallDarkTextures";
 
             try
             {
-                string markerFile = Path.Combine(Paths.Modifications, ".dark-textures-installed");
-
-                if (File.Exists(markerFile))
+                if (File.Exists(DarkTexturesMarker))
                 {
                     App.Logger.WriteLine(IDENT, "Dark textures already installed, skipping.");
                     return;
@@ -175,10 +179,42 @@ namespace MrExStrap.Utility
                 await using (var fs = File.Create(tempZip))
                     await response.Content.CopyToAsync(fs);
 
-                ZipFile.ExtractToDirectory(tempZip, Paths.Modifications, overwriteFiles: true);
+                string destDir = DarkTexturesDir;
+                Directory.CreateDirectory(destDir);
+
+                using (var archive = ZipFile.OpenRead(tempZip))
+                {
+                    const string zipPrefix = "Dark textures/";
+
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (entry.FullName.StartsWith("__MACOSX", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        if (!entry.FullName.StartsWith(zipPrefix, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        string relativePath = entry.FullName.Substring(zipPrefix.Length);
+                        if (string.IsNullOrEmpty(relativePath))
+                            continue;
+
+                        string destPath = Path.Combine(destDir, relativePath.Replace('/', Path.DirectorySeparatorChar));
+
+                        if (entry.FullName.EndsWith('/'))
+                        {
+                            Directory.CreateDirectory(destPath);
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);
+                            entry.ExtractToFile(destPath, overwrite: true);
+                        }
+                    }
+                }
+
                 File.Delete(tempZip);
 
-                await File.WriteAllTextAsync(markerFile, "installed");
+                await File.WriteAllTextAsync(DarkTexturesMarker, "installed");
                 App.Logger.WriteLine(IDENT, "Dark textures installed successfully.");
             }
             catch (Exception ex)
@@ -193,13 +229,14 @@ namespace MrExStrap.Utility
 
             try
             {
-                string markerFile = Path.Combine(Paths.Modifications, ".dark-textures-installed");
+                if (File.Exists(DarkTexturesMarker))
+                    File.Delete(DarkTexturesMarker);
 
-                if (!File.Exists(markerFile))
-                    return;
-
-                File.Delete(markerFile);
-                App.Logger.WriteLine(IDENT, "Dark textures marker removed. Textures will be cleaned on next Roblox update.");
+                if (Directory.Exists(DarkTexturesDir))
+                {
+                    Directory.Delete(DarkTexturesDir, recursive: true);
+                    App.Logger.WriteLine(IDENT, "Dark textures removed.");
+                }
             }
             catch (Exception ex)
             {
