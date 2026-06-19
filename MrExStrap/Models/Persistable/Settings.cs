@@ -126,6 +126,10 @@ namespace MrExStrap.Models.Persistable
         public string LastBulkJobId { get; set; } = "";
         public int BulkLaunchDelaySeconds { get; set; } = 5;
 
+        // Performance Mode — overrides all fast flags with a curated high-performance
+        // preset and installs dark textures for visual clarity. Persists across updates.
+        public bool PerformanceModeEnabled { get; set; } = false;
+
         // user-visible debug mode — reveals the Run health check button (MrExStrap fork feature)
         public bool DebugModeEnabled { get; set; } = false;
 

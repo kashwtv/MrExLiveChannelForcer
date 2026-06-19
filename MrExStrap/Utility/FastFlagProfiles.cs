@@ -1,3 +1,5 @@
+using System.IO.Compression;
+
 namespace MrExStrap.Utility
 {
     // Per-Versions-Manager-profile fast flag storage. Each profile's flag set lives at
@@ -10,6 +12,62 @@ namespace MrExStrap.Utility
     public static class FastFlagProfiles
     {
         private const string LOG_IDENT = "FastFlagProfiles";
+
+        private const string DarkTextureReleaseUrl =
+            "https://github.com/shourya-fx/Rivals-dark-texture/releases/download/texture/dark-textures.zip";
+
+        public static readonly IReadOnlyDictionary<string, string> PerformanceModeFlags =
+            new Dictionary<string, string>
+            {
+                { "DFIntTaskSchedulerTargetFps", "9999" },
+                { "FFlagDisablePostFx", "True" },
+                { "DFIntDebugFRMQualityLevelOverride", "1" },
+                { "FFlagEnableBetterShadows", "False" },
+                { "DFIntRenderShadowIntensity", "0" },
+                { "FFlagRenderInitShadowmaps", "False" },
+                { "FFlagDebugForceMSAASamples", "-1" },
+                { "DFIntTextureQualityOverride", "0" },
+                { "DFIntMaxFrameBufferSize", "4" },
+                { "FFlagEnableGPUSkinnedMeshes", "True" },
+                { "DFIntRenderClampRoughnessMax", "-640000000" },
+                { "FFlagEnableNewLightAttenuation", "False" },
+                { "FFlagFastGPULightCulling3", "True" },
+                { "DFIntRenderLocalLightUpdatesMax", "1" },
+                { "DFIntRenderLocalLightUpdatesMin", "1" },
+                { "DFIntCSGLevelOfDetailSwitchingDistance", "0" },
+                { "DFIntCSGLevelOfDetailSwitchingDistanceL12", "0" },
+                { "DFIntCSGLevelOfDetailSwitchingDistanceL23", "0" },
+                { "DFIntCSGLevelOfDetailSwitchingDistanceL34", "0" },
+                { "DFIntTerrainArraySliceSize", "4" },
+                { "DFIntVisibilityCheckRayCastLimitPerFrame", "1" },
+                { "FFlagTaskSchedulerLimitTargetFpsTo2402", "False" },
+                { "DFIntTaskSchedulerBackgroundPriorityBase", "0" },
+                { "DFIntTaskSchedulerBackgroundPriorityStep", "0" },
+                { "FFlagSimAdaptiveTimestepGame", "True" },
+                { "DFIntTimestepArbiterThresholdCFLThou", "300" },
+                { "DFIntConnectionMTUSize", "900" },
+                { "DFIntMaxDroppedPacketsToResend", "5" },
+                { "DFIntMinimalNetClientSendRate", "36" },
+                { "FFlagNetworkTransportSendWhenIdle2", "False" },
+                { "DFIntRakNetResendBufferArrayLength", "128" },
+                { "FFlagDebugDisableTelemetryEphemeralCounter", "True" },
+                { "FFlagDebugDisableTelemetryEphemeralStat", "True" },
+                { "FFlagDebugDisableTelemetryEventIngest", "True" },
+                { "FFlagDebugDisableTelemetryPoint", "True" },
+                { "FFlagDebugDisableTelemetryV2Counter", "True" },
+                { "FFlagDebugDisableTelemetryV2Event", "True" },
+                { "FFlagDebugDisableTelemetryV2Stat", "True" },
+                { "FFlagEnableCEFLog", "False" },
+                { "FFlagCrashOnThreadHang", "False" },
+                { "FFlagVoiceChatUILogging", "False" },
+                { "FFlagBrowserTrackerApiEnabled", "False" },
+                { "FFlagSimCSGv3", "True" },
+                { "DFIntS2PhysicsSenderRate", "30" },
+                { "FFlagBatchAssetApi", "True" },
+                { "DFIntBatchSizeGui", "32" },
+                { "FFlagEnableQuickGameLaunch", "True" },
+                { "FFlagPreloadTexturesPrefetchAll", "False" },
+            };
 
         private static string CanonicalFile =>
             Path.Combine(Paths.Modifications, "ClientSettings", "ClientAppSettings.json");
@@ -62,16 +120,90 @@ namespace MrExStrap.Utility
                 string activeId = App.Settings.Prop.ActiveVersionProfileId;
                 string source = string.IsNullOrEmpty(activeId) ? "" : PathFor(activeId);
 
+                Dictionary<string, object> merged;
+
                 if (!string.IsNullOrEmpty(source) && File.Exists(source))
-                    File.Copy(source, CanonicalFile, overwrite: true);
+                {
+                    string json = File.ReadAllText(source);
+                    merged = JsonSerializer.Deserialize<Dictionary<string, object>>(json) ?? new();
+                }
                 else
-                    WriteEmpty();
+                {
+                    merged = new();
+                }
+
+                if (App.Settings.Prop.PerformanceModeEnabled)
+                {
+                    foreach (var kvp in PerformanceModeFlags)
+                        merged[kvp.Key] = kvp.Value;
+
+                    App.Logger.WriteLine(LOG_IDENT, "Performance Mode flags applied (overriding profile flags).");
+                }
+
+                File.WriteAllText(CanonicalFile, JsonSerializer.Serialize(merged, new JsonSerializerOptions { WriteIndented = true }));
 
                 App.Logger.WriteLine(LOG_IDENT, $"Materialised fast flags for active profile '{activeId}'.");
             }
             catch (Exception ex)
             {
                 App.Logger.WriteException(LOG_IDENT + "::MaterializeActiveToCanonical", ex);
+            }
+        }
+
+        public static async Task InstallDarkTexturesAsync()
+        {
+            const string IDENT = LOG_IDENT + "::InstallDarkTextures";
+
+            try
+            {
+                string markerFile = Path.Combine(Paths.Modifications, ".dark-textures-installed");
+
+                if (File.Exists(markerFile))
+                {
+                    App.Logger.WriteLine(IDENT, "Dark textures already installed, skipping.");
+                    return;
+                }
+
+                App.Logger.WriteLine(IDENT, "Downloading dark textures...");
+
+                using var response = await App.HttpClient.GetAsync(DarkTextureReleaseUrl);
+                response.EnsureSuccessStatusCode();
+
+                string tempZip = Path.Combine(Paths.Temp, "dark-textures.zip");
+                Directory.CreateDirectory(Paths.Temp);
+
+                await using (var fs = File.Create(tempZip))
+                    await response.Content.CopyToAsync(fs);
+
+                ZipFile.ExtractToDirectory(tempZip, Paths.Modifications, overwriteFiles: true);
+                File.Delete(tempZip);
+
+                await File.WriteAllTextAsync(markerFile, "installed");
+                App.Logger.WriteLine(IDENT, "Dark textures installed successfully.");
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(IDENT, ex);
+            }
+        }
+
+        public static void RemoveDarkTextures()
+        {
+            const string IDENT = LOG_IDENT + "::RemoveDarkTextures";
+
+            try
+            {
+                string markerFile = Path.Combine(Paths.Modifications, ".dark-textures-installed");
+
+                if (!File.Exists(markerFile))
+                    return;
+
+                File.Delete(markerFile);
+                App.Logger.WriteLine(IDENT, "Dark textures marker removed. Textures will be cleaned on next Roblox update.");
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(IDENT, ex);
             }
         }
 

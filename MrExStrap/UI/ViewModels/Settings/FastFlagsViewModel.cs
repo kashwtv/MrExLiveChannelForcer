@@ -1,4 +1,5 @@
 using MrExStrap.Enums.FlagPresets;
+using MrExStrap.Utility;
 
 namespace MrExStrap.UI.ViewModels.Settings
 {
@@ -48,6 +49,21 @@ namespace MrExStrap.UI.ViewModels.Settings
                 }
             }
         }
+        public bool PerformanceModeEnabled
+        {
+            get => App.Settings.Prop.PerformanceModeEnabled;
+            set
+            {
+                App.Settings.Prop.PerformanceModeEnabled = value;
+                OnPropertyChanged(nameof(PerformanceModeEnabled));
+
+                if (value)
+                    _ = FastFlagProfiles.InstallDarkTexturesAsync();
+                else
+                    FastFlagProfiles.RemoveDarkTextures();
+            }
+        }
+
         public bool ResetConfiguration
         {
             get => _preResetFlags is not null;
